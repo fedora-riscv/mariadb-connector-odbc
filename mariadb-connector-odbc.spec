@@ -1,6 +1,6 @@
 Name:           mariadb-connector-odbc
 Version:        2.0.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 Group:          Applications/Databases
 License:        LGPLv2+
@@ -46,5 +46,8 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.0.12-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Oct 19 2016 Michal Schorm <mschorm@redhat.com> - 2.0.12-1
 - Initial version for 2.0.12
