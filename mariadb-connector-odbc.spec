@@ -1,20 +1,13 @@
-# !! CRITICAL BLOCKING ISSUES !!
-# https://jira.mariadb.org/browse/ODBC-98
-# https://bugzilla.redhat.com/show_bug.cgi?id=1397869
-# https://bugzilla.redhat.com/show_bug.cgi?id=1381548
-
-# THE PACKAGE CANNOT BE USED UNTIL THEY ARE SOLVED BY UPSTREAM
-
 Name:           mariadb-connector-odbc
-Version:        2.0.14
-Release:        3%{?dist}
+Version:        3.0.1
+Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 Group:          Applications/Databases
 License:        LGPLv2+
-Source:         http://mirror.hosting90.cz/mariadb/connector-odbc-%{version}/source/mariadb-connector-odbc-%{version}-ga-src.tar.gz
+Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariadb-connector-odbc-%{version}-beta-src.tar.gz
 Url:            https://mariadb.org/en/
 BuildRequires:  cmake unixODBC-devel
-BuildRequires:  mariadb-connector-c-devel >= 2.3.2
+BuildRequires:  mariadb-connector-c-devel >= 3.0.2
 
 # Set Cmake to build against dynamic library with parameter "-DMARIADB_DYNAMIC_LIB=..."
 Patch:          CMakeLists.txt.patch
@@ -26,7 +19,7 @@ Standard 3.5, can be used as a drop-in replacement for MySQL Connector/ODBC,
 and it supports both Unicode and ANSI modes.
 
 %prep
-%setup -q -n mariadb-connector-odbc-%{version}-ga-src
+%setup -q -n mariadb-connector-odbc-%{version}-beta-src
 %patch -p1 -b .backup
 
 %build
@@ -51,6 +44,9 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Mon Sep 04 2017 Augusto Caringi <acaringi@fedoraproject.org> - 3.0.1-1
+- Update to version 3.0.1
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.0.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 

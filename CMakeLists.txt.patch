@@ -1,16 +1,14 @@
-diff -uNr mariadb-connector-odbc-2.0.12-ga-src/CMakeLists.txt mariadb-connector-odbc-2.0.12-ga-src_new/CMakeLists.txt
---- mariadb-connector-odbc-2.0.12-ga-src/CMakeLists.txt	2016-09-15 18:20:06.000000000 +0200
-+++ mariadb-connector-odbc-2.0.12-ga-src_new/CMakeLists.txt	2016-10-04 08:49:08.517231222 +0200
-@@ -207,7 +207,11 @@
- CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/mariadb-odbc-driver.def.in
+diff -Naur mariadb-connector-odbc-3.0.1-beta-src/CMakeLists.txt mariadb-connector-odbc-3.0.1-beta-src-new/CMakeLists.txt
+--- mariadb-connector-odbc-3.0.1-beta-src/CMakeLists.txt	2017-08-01 14:24:14.000000000 +0200
++++ mariadb-connector-odbc-3.0.1-beta-src-new/CMakeLists.txt	2017-09-04 13:53:51.140537112 +0200
+@@ -230,6 +230,10 @@
                 ${CMAKE_SOURCE_DIR}/mariadb-odbc-driver-uni.def)
  
--####### MAODBC #######             
-+####### MAODBC #######
+ ####### MAODBC #######             
 +IF(MARIADB_DYNAMIC_LIB)
 +  SET(MARIADB_LIB ${MARIADB_DYNAMIC_LIB})
 +ENDIF()
 +
- ADD_LIBRARY(maodbc SHARED ${MARIADB_ODBC_SOURCES} ${CMAKE_SOURCE_DIR}/mariadb-odbc-driver-uni.def maodbcu.rc)
+ ADD_LIBRARY(${LIBRARY_NAME} SHARED ${MARIADB_ODBC_SOURCES} ${CMAKE_SOURCE_DIR}/mariadb-odbc-driver-uni.def maodbcu.rc)
+ 
  SET_TARGET_PROPERTIES(maodbc PROPERTIES LANGUAGE C)
- TARGET_LINK_LIBRARIES(maodbc ${MARIADB_LIB} ${ODBC_INSTLIBS} ${PLATFORM_DEPENDENCIES})
