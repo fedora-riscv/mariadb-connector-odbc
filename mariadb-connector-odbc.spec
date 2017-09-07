@@ -1,6 +1,6 @@
 Name:           mariadb-connector-odbc
 Version:        3.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 Group:          Applications/Databases
 License:        LGPLv2+
@@ -8,9 +8,6 @@ Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariad
 Url:            https://mariadb.org/en/
 BuildRequires:  cmake unixODBC-devel
 BuildRequires:  mariadb-connector-c-devel >= 3.0.2
-
-# Set Cmake to build against dynamic library with parameter "-DMARIADB_DYNAMIC_LIB=..."
-Patch:          CMakeLists.txt.patch
 
 %description
 MariaDB Connector/ODBC is a standardized, LGPL licensed database driver using
@@ -20,10 +17,9 @@ and it supports both Unicode and ANSI modes.
 
 %prep
 %setup -q -n mariadb-connector-odbc-%{version}-beta-src
-%patch -p1 -b .backup
 
 %build
-%cmake ./ -DMARIADB_DYNAMIC_LIB="%{_libdir}/mariadb/libmariadb.so"
+%cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/mariadb/libmariadb.so"
 
 %install
 %make_install DESTDIR=$RPM_BUILD_ROOT
@@ -44,6 +40,11 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Thu Sep 07 2017 Augusto Caringi <acaringi@fedoraproject.org> - 3.0.1-2
+- Update to top of 3.0 branch from GitHub 860e7f8b754f (version supporting dynamic linking)
+- Source tarball composed from upstream GitHub, because the latest version solves the issues
+  with dynamic linking.
+
 * Mon Sep 04 2017 Augusto Caringi <acaringi@fedoraproject.org> - 3.0.1-1
 - Update to version 3.0.1
 
