@@ -1,8 +1,7 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.1
-Release:        2%{?dist}
+Version:        3.0.2
+Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
-Group:          Applications/Databases
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariadb-connector-odbc-%{version}-beta-src.tar.gz
 Url:            https://mariadb.org/en/
@@ -16,7 +15,7 @@ Standard 3.5, can be used as a drop-in replacement for MySQL Connector/ODBC,
 and it supports both Unicode and ANSI modes.
 
 %prep
-%setup -q -n mariadb-connector-odbc-%{version}-beta-src
+%setup -q -n mariadb-connector-odbc-%{version}-ga-src
 
 %build
 %cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/mariadb/libmariadb.so"
@@ -27,8 +26,8 @@ and it supports both Unicode and ANSI modes.
 rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/COPYING
 rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+# Can be removed on F27 EOL
+%ldconfig_scriptlets
 
 %files
 %defattr(-,root,root,-)
@@ -40,6 +39,11 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Tue Jan 30 2018 Michal Schorm <mschorm@redhat.com> - 3.0.2-1
+- Rebase to 3.0.2 version
+- Update ldconfig scriptlets
+- Remove Group tag
+
 * Thu Sep 07 2017 Augusto Caringi <acaringi@fedoraproject.org> - 3.0.1-2
 - Update to top of 3.0 branch from GitHub 860e7f8b754f (version supporting dynamic linking)
 - Source tarball composed from upstream GitHub, because the latest version solves the issues
