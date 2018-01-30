@@ -3,8 +3,9 @@ Version:        3.0.2
 Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
-Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariadb-connector-odbc-%{version}-beta-src.tar.gz
+Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariadb-connector-odbc-%{version}-ga-src.tar.gz
 Url:            https://mariadb.org/en/
+
 BuildRequires:  cmake unixODBC-devel
 BuildRequires:  mariadb-connector-c-devel >= 3.0.2
 
