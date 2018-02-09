@@ -31,7 +31,6 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 %ldconfig_scriptlets
 
 %files
-%defattr(-,root,root,-)
 %license COPYING
 %doc     README
 %{_libdir}/libmaodbc.so
