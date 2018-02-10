@@ -1,9 +1,9 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.2
-Release:        2%{?dist}
+Version:        3.0.3
+Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
-Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/mariadb-connector-odbc-%{version}-ga-src.tar.gz
+Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
 Url:            https://mariadb.org/en/
 
 BuildRequires:  cmake unixODBC-devel
@@ -16,16 +16,16 @@ Standard 3.5, can be used as a drop-in replacement for MySQL Connector/ODBC,
 and it supports both Unicode and ANSI modes.
 
 %prep
-%setup -q -n mariadb-connector-odbc-%{version}-ga-src
+%setup -q -n %{name}-%{version}-ga-src
 
 %build
 %cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/mariadb/libmariadb.so"
 
 %install
-%make_install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
-rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/COPYING
-rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
+rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/COPYING
+rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 # Can be removed on F27 EOL
 %ldconfig_scriptlets
@@ -33,12 +33,17 @@ rm /$RPM_BUILD_ROOT/usr/share/doc/mariadb_connector_odbc/README
 %files
 %license COPYING
 %doc     README
-%{_libdir}/libmaodbc.so
+
 # This is unixODBC plugin. It resides directly in {libdir} to be consistent with the rest of unixODBC plugins. Since it is plugin, it doesn´t need to be versioned.
+%{_libdir}/libmaodbc.so
 
 
 
 %changelog
+* Sat Feb 10 2018 Michal Schorm <mschorm@redhat.com> - 3.0.3-1
+- Rebase to 3.0.3 version
+- Use more macros
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
