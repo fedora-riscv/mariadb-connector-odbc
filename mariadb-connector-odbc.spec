@@ -6,7 +6,7 @@ License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
 Url:            https://mariadb.org/en/
 
-BuildRequires:  cmake unixODBC-devel
+BuildRequires:  cmake unixODBC-devel gcc-c++
 BuildRequires:  mariadb-connector-c-devel >= 3.0.2
 
 %description
