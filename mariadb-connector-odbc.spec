@@ -19,7 +19,16 @@ and it supports both Unicode and ANSI modes.
 %setup -q -n %{name}-%{version}-ga-src
 
 %build
-%cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/mariadb/libmariadb.so"
+%cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
+          -DBUILD_SHARED_LIBS="ON" \
+          -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+          -DCMAKE_INSTALL_PREFIX="%{_usr}" \
+          -DINCLUDE_INSTALL_DIR="%{_includedir}" \
+          -DLIB_INSTALL_DIR="%{_libdir}" \
+          -DSHARE_INSTALL_PREFIX="%{_datadir}" \
+          -DSYSCONF_INSTALL_DIR="%{_sysconfdir}"
+
+#cmake -LH
 
 %install
 %make_install
@@ -34,7 +43,7 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 %license COPYING
 %doc     README
 
-# This is unixODBC plugin. It resides directly in {libdir} to be consistent with the rest of unixODBC plugins. Since it is plugin, it doesn´t need to be versioned.
+# This is unixODBC plugin. It resides directly in %%{_libdir} to be consistent with the rest of unixODBC plugins. Since it is plugin, it doesn´t need to be versioned.
 %{_libdir}/libmaodbc.so
 
 
