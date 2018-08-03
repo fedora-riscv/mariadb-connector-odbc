@@ -1,13 +1,15 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.3
-Release:        2%{?dist}
+Version:        3.0.6
+Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
 Url:            https://mariadb.org/en/
 
 BuildRequires:  cmake unixODBC-devel gcc-c++
-BuildRequires:  mariadb-connector-c-devel >= 3.0.2
+BuildRequires:  mariadb-connector-c-devel >= 3.0.6
+
+Patch1:         libraries_include_path.patch
 
 %description
 MariaDB Connector/ODBC is a standardized, LGPL licensed database driver using
@@ -17,6 +19,7 @@ and it supports both Unicode and ANSI modes.
 
 %prep
 %setup -q -n %{name}-%{version}-ga-src
+%patch1 -p1
 
 %build
 %cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
@@ -28,7 +31,7 @@ and it supports both Unicode and ANSI modes.
           -DSHARE_INSTALL_PREFIX="%{_datadir}" \
           -DSYSCONF_INSTALL_DIR="%{_sysconfdir}"
 
-#cmake -LH
+#cmake -LAH
 
 %install
 %make_install
@@ -49,6 +52,11 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Fri Aug 03 2018 Michal Schorm <mschorm@redhat.com> - 3.0.6-1
+- Rebase to 3.0.6
+- Raise the minimal version of the connector-c required, because of a fixed bug
+  which affected connector-odbc builds
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 3.0.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 

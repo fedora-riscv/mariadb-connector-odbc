@@ -1,0 +1,20 @@
+--- mariadb-connector-odbc-3.0.6-ga-src/ma_odbc.h	2018-07-31 13:39:02.000000000 +0200
++++ mariadb-connector-odbc-3.0.6-ga-src/ma_odbc.h_patched	2018-08-01 16:10:09.962798000 +0200
+@@ -29,7 +29,7 @@
+ 
+ #include <stdlib.h>
+ 
+-#include <mysql.h>
++#include <mysql/mysql.h>
+ 
+ #include <ma_legacy_helpers.h>
+ 
+@@ -37,7 +37,7 @@
+ #include <sqlext.h>
+ #include <odbcinst.h>
+ 
+-#include <errmsg.h>
++#include <mysql/errmsg.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <math.h>
