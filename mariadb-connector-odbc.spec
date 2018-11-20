@@ -1,5 +1,5 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.6
+Version:        3.0.7
 Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
@@ -32,6 +32,7 @@ and it supports both Unicode and ANSI modes.
           -DSYSCONF_INSTALL_DIR="%{_sysconfdir}"
 
 #cmake -LAH
+cmake -L
 
 %install
 %make_install
@@ -52,6 +53,9 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Tue Nov 20 2018 Michal Schorm <mschorm@redhat.com> - 3.0.7-1
+- Rebase to 3.0.7
+
 * Fri Aug 03 2018 Michal Schorm <mschorm@redhat.com> - 3.0.6-1
 - Rebase to 3.0.6
 - Raise the minimal version of the connector-c required, because of a fixed bug
