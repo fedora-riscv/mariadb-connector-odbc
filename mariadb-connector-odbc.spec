@@ -1,5 +1,5 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.7
+Version:        3.0.8
 Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
@@ -53,6 +53,9 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Sun Jan 06 2019 Michal Schorm <mschorm@redhat.com> - 3.0.8-1
+- Rebase to 3.0.8
+
 * Tue Nov 20 2018 Michal Schorm <mschorm@redhat.com> - 3.0.7-1
 - Rebase to 3.0.7
 
