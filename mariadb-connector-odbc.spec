@@ -32,7 +32,7 @@ and it supports both Unicode and ANSI modes.
           -DSYSCONF_INSTALL_DIR="%{_sysconfdir}"
 
 #cmake -LAH
-cmake -L
+cmake ./ -L
 
 %install
 %make_install
