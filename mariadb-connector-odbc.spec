@@ -1,6 +1,6 @@
 Name:           mariadb-connector-odbc
 Version:        3.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -22,17 +22,18 @@ and it supports both Unicode and ANSI modes.
 %patch1 -p1
 
 %build
-%cmake ./ -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
-          -DBUILD_SHARED_LIBS="ON" \
-          -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
-          -DCMAKE_INSTALL_PREFIX="%{_usr}" \
-          -DINCLUDE_INSTALL_DIR="%{_includedir}" \
-          -DLIB_INSTALL_DIR="%{_libdir}" \
-          -DSHARE_INSTALL_PREFIX="%{_datadir}" \
-          -DSYSCONF_INSTALL_DIR="%{_sysconfdir}"
+%cmake -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
+       -DBUILD_SHARED_LIBS="ON" \
+       -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+       -DCMAKE_INSTALL_PREFIX="%{_usr}" \
+       -DINCLUDE_INSTALL_DIR="%{_includedir}" \
+       -DLIB_INSTALL_DIR="%{_libdir}" \
+       -DSHARE_INSTALL_PREFIX="%{_datadir}" \
+       -DSYSCONF_INSTALL_DIR="%{_sysconfdir}" \
+       .
 
 #cmake -LAH
-cmake ./ -L
+cmake -L .
 
 %install
 %make_install
@@ -53,6 +54,9 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Wed Jan 23 2019 Björn Esser <besser82@fedoraproject.org> - 3.0.8-2
+- Append curdir to CMake invokation. (#1668512)
+
 * Sun Jan 06 2019 Michal Schorm <mschorm@redhat.com> - 3.0.8-1
 - Rebase to 3.0.8
 
