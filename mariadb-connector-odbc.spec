@@ -1,6 +1,6 @@
 Name:           mariadb-connector-odbc
 Version:        3.0.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -54,6 +54,9 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 3.0.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Wed Jan 23 2019 Björn Esser <besser82@fedoraproject.org> - 3.0.8-2
 - Append curdir to CMake invokation. (#1668512)
 
