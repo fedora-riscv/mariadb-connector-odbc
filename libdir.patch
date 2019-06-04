@@ -1,0 +1,13 @@
+Reported upstream as: https://jira.mariadb.org/browse/ODBC-254
+
+--- mariadb-connector-odbc-3.1.1-ga-src/CMakeLists.txt	2019-05-02 14:41:44.000000000 +0200
++++ mariadb-connector-odbc-3.1.1-ga-src/CMakeLists.txt_patched	2019-06-04 13:45:49.603601852 +0200
+@@ -324,7 +324,7 @@ ELSE()
+   IF(NOT DEFINED INSTALL_LIB_SUFFIX)
+     SET(INSTALL_LIB_SUFFIX "lib")
+     IF("${CMAKE_SIZEOF_VOID_P}" EQUAL "8" AND EXISTS "/usr/lib64/")
+-      SET(INSTALL_LIB_SUFFIX "lib")
++      SET(INSTALL_LIB_SUFFIX "lib64")
+     ENDIF()
+   ENDIF()
+ 

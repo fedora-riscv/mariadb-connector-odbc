@@ -1,5 +1,5 @@
 Name:           mariadb-connector-odbc
-Version:        3.0.9
+Version:        3.1.1
 Release:        1%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
@@ -10,6 +10,7 @@ BuildRequires:  cmake unixODBC-devel gcc-c++
 BuildRequires:  mariadb-connector-c-devel >= 3.0.6
 
 Patch1:         libraries_include_path.patch
+Patch2:         libdir.patch
 
 %description
 MariaDB Connector/ODBC is a standardized, LGPL licensed database driver using
@@ -20,6 +21,7 @@ and it supports both Unicode and ANSI modes.
 %prep
 %setup -q -n %{name}-%{version}-ga-src
 %patch1 -p1
+%patch2 -p1
 
 %build
 %cmake -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
@@ -54,6 +56,9 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Tue Jun 04 2019 Michal Schorm <mschorm@redhat.com> - 3.1.1-1
+- Rebase to 3.1.1
+
 * Tue Jun 04 2019 Michal Schorm <mschorm@redhat.com> - 3.0.9-1
 - Rebase to 3.0.9
 
