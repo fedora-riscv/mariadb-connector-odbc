@@ -1,0 +1,32 @@
+Reported upstream as a RFE:
+https://jira.mariadb.org/browse/ODBC-258
+
+--- mariadb-connector-odbc-3.1.1-ga-src/CMakeLists.txt	2019-05-02 14:41:44.000000000 +0200
++++ mariadb-connector-odbc-3.1.1-ga-src/CMakeLists.txt_patched	2019-06-25 14:31:46.211295272 +0200
+@@ -333,12 +333,24 @@ ELSE()
+           LIBRARY DESTINATION ./${INSTALL_LIB_SUFFIX}
+           COMPONENT ODBCLibs)
+ 
++  IF(NOT DEFINED INSTALL_DOC_DIR)
++    SET(INSTALL_DOC_DIR "./share/doc/${CPACK_PACKAGE_NAME}/")
++  ENDIF()
++  IF(NOT DEFINED INSTALL_LICENSE_DIR)
++    SET(INSTALL_LICENSE_DIR "./share/doc/${CPACK_PACKAGE_NAME}/")
++  ENDIF()
++
+   INSTALL(FILES
+-          ${CMAKE_SOURCE_DIR}/COPYING
+           ${CMAKE_SOURCE_DIR}/README
+           DESTINATION
+-          ./share/doc/${CPACK_PACKAGE_NAME}/
++          ${INSTALL_DOC_DIR}
+           COMPONENT Documentation)
++  INSTALL(FILES
++          ${CMAKE_SOURCE_DIR}/COPYING
++          DESTINATION
++          ${INSTALL_LICENSE_DIR}
++          COMPONENT Documentation)
++
+ ENDIF()
+ 
+ # Tests. Checking if we have them. May be not the case if we are building from source package

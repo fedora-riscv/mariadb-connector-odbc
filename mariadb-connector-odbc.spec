@@ -1,15 +1,21 @@
+# For deep debugging we need to build binaries with extra debug info
+%bcond_with    debug
+
 Name:           mariadb-connector-odbc
 Version:        3.1.1
-Release:        2%{?dist}
+Release:        3%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
 Url:            https://mariadb.org/en/
+# Online documentation can be found at: https://mariadb.com/kb/en/library/mariadb-connector-odbc/
 
 BuildRequires:  cmake unixODBC-devel gcc-c++
 BuildRequires:  mariadb-connector-c-devel >= 3.0.6
 
 Patch1:         libraries_include_path.patch
+# Reported upstream JIRA: ODBC-258
+Patch2:         cmake_docdir_licensedir_configurable.patch
 
 %description
 MariaDB Connector/ODBC is a standardized, LGPL licensed database driver using
@@ -20,16 +26,24 @@ and it supports both Unicode and ANSI modes.
 %prep
 %setup -q -n %{name}-%{version}-ga-src
 %patch1 -p1
+%patch2 -p1
 
 %build
+# Override all optimization flags when making a debug build
+%{?with_debug: CFLAGS="$CFLAGS -O0 -g"}
+CXXFLAGS="$CFLAGS"
+export CFLAGS CXXFLAGS
+
 %cmake -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
        -DBUILD_SHARED_LIBS="ON" \
-       -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
+       -DCMAKE_BUILD_TYPE="%{?with_debug:Debug}%{!?with_tokudb:RelWithDebInfo}" \
        -DCMAKE_INSTALL_PREFIX="%{_usr}" \
        -DINCLUDE_INSTALL_DIR="%{_includedir}" \
        -DINSTALL_LIB_SUFFIX="%{_lib}" \
        -DSHARE_INSTALL_PREFIX="%{_datadir}" \
        -DSYSCONF_INSTALL_DIR="%{_sysconfdir}" \
+       -DINSTALL_DOC_DIR="%{_defaultdocdir}/%{name}" \
+       -DINSTALL_LICENSE_DIR="%{_defaultlicensedir}/%{name}" \
        .
 
 #cmake -LAH
@@ -38,11 +52,10 @@ cmake -L .
 %install
 %make_install
 
-rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/COPYING
-rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
-
-# Can be removed on F27 EOL
-%ldconfig_scriptlets
+# Can be commented out thanks to Patch2.
+# Can be dropped if upstream accept the patch (https://jira.mariadb.org/browse/ODBC-258)
+  # The %%doc and %%license files are installed to the wrong location by default
+  # rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/{README,COPYING}
 
 %files
 %license COPYING
@@ -54,6 +67,10 @@ rm %{buildroot}%{_datadir}/doc/mariadb_connector_odbc/README
 
 
 %changelog
+* Wed Jun 05 2019 Michal Schorm <mschorm@redhat.com> - 3.1.1-3
+- Added debug build switch
+- Added patch2: configurable doc and license dirs paths
+
 * Wed Jun 05 2019 Michal Schorm <mschorm@redhat.com> - 3.1.1-2
 - Patch solution found
 
