@@ -38,7 +38,7 @@ export CFLAGS CXXFLAGS
 
 %cmake -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
        -DBUILD_SHARED_LIBS="ON" \
-       -DCMAKE_BUILD_TYPE="%{?with_debug:Debug}%{!?with_tokudb:RelWithDebInfo}" \
+       -DCMAKE_BUILD_TYPE="%{?with_debug:Debug}%{!?with_debug:RelWithDebInfo}" \
        -DCMAKE_INSTALL_PREFIX="%{_usr}" \
        -DINCLUDE_INSTALL_DIR="%{_includedir}" \
        -DINSTALL_LIB_SUFFIX="%{_lib}" \
