@@ -1,9 +1,9 @@
 # For deep debugging we need to build binaries with extra debug info
-%bcond_with    debug
+%bcond_with     debug
 
 Name:           mariadb-connector-odbc
 Version:        3.1.1
-Release:        3%{?with_debug:.debug}%{?dist}
+Release:        4%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -29,6 +29,8 @@ and it supports both Unicode and ANSI modes.
 %patch2 -p1
 
 %build
+%{set_build_flags}
+
 # Override all optimization flags when making a debug build
 %{?with_debug: CFLAGS="$CFLAGS -O0 -g"}
 CXXFLAGS="$CFLAGS"
@@ -67,6 +69,9 @@ cmake -L .
 
 
 %changelog
+* Fri Jul 19 2019 Michal Schorm <mschorm@redhat.com> - 3.1.1-4
+- Use macro for setting the compiler flags
+
 * Wed Jun 05 2019 Michal Schorm <mschorm@redhat.com> - 3.1.1-3
 - Added debug build switch
 - Added patch2: configurable doc and license dirs paths
