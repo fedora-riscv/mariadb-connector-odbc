@@ -3,7 +3,7 @@
 
 Name:           mariadb-connector-odbc
 Version:        3.1.4
-Release:        1%{?with_debug:.debug}%{?dist}
+Release:        2%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -61,6 +61,9 @@ cmake -L .
 
 
 %changelog
+* Tue Nov 12 2019 Michal Schorm <mschorm@redhat.com> - 3.1.4-2
+- Rebuild on top of new mariadb-connector-c
+
 * Mon Nov 04 2019 Michal Schorm <mschorm@redhat.com> - 3.1.4-1
 - Rebase to 3.1.4
 
