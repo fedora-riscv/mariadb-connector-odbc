@@ -2,7 +2,7 @@
 %bcond_with     debug
 
 Name:           mariadb-connector-odbc
-Version:        3.1.5
+Version:        3.1.6
 Release:        1%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
@@ -61,6 +61,9 @@ cmake -L .
 
 
 %changelog
+* Thu Jan 23 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3.1.6-1
+- Rebase to 3.1.6
+
 * Fri Nov 15 2019 Lukas Javorsky <ljavorsk@redhat.com> - 3.1.5-1
 - Rebase to 3.1.5
 
