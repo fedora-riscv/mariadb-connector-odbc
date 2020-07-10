@@ -1,5 +1,6 @@
 This patch is giving the maintainer option to define path to COPYING and README files.
 
+Github PR: https://github.com/mariadb-corporation/mariadb-connector-odbc/pull/36
 
 --- mariadb-connector-odbc-3.1.9-ga-src/CMakeLists.txt.old	2020-07-07 13:46:42.106327846 +0200
 +++ mariadb-connector-odbc-3.1.9-ga-src/CMakeLists.txt	2020-07-07 13:47:34.037882817 +0200
