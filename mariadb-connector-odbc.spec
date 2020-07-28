@@ -3,7 +3,7 @@
 
 Name:           mariadb-connector-odbc
 Version:        3.1.9
-Release:        1%{?with_debug:.debug}%{?dist}
+Release:        2%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -63,6 +63,9 @@ cmake -L .
 
 
 %changelog
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.1.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
 * Thu Jul 02 2020 Lukas Javorsky <ljavorsk@redhat.com> - 3.1.9-1
 - Rebase to 3.1.9
 - Add patch add_docs_license_dir_option
