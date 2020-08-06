@@ -1,9 +1,21 @@
 # For deep debugging we need to build binaries with extra debug info
 %bcond_with     debug
 
+# Enable CMake in-source builds
+#   This is a fix for the https://fedoraproject.org/wiki/Changes/CMake_to_do_out-of-source_builds
+#   So the beaviour will be the same also in F31 nad F32
+%undefine __cmake_in_source_build
+#   Be aware that all subsequent call of CMake *MUST* be called with the specified builddir
+#   e.g. " cmake -B %%{__cmake_builddir} -LAH "
+#   Otherwise you will experience *really odd* behaviour. HOWEVER the "%%{__cmake_builddir}" is not suitable for use,
+#   read this mail discussion for details:
+#   https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/WJUNUJ7BJQYXQTONR5AGOKD3ZNKLSDDC/
+
+
+
 Name:           mariadb-connector-odbc
 Version:        3.1.9
-Release:        3%{?with_debug:.debug}%{?dist}
+Release:        4%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
 Source:         https://downloads.mariadb.org/f/connector-odbc-%{version}/%{name}-%{version}-ga-src.tar.gz
@@ -22,36 +34,45 @@ the industry standard Open Database Connectivity (ODBC) API. It supports ODBC
 Standard 3.5, can be used as a drop-in replacement for MySQL Connector/ODBC,
 and it supports both Unicode and ANSI modes.
 
+
+
 %prep
 %setup -q -n %{name}-%{version}-ga-src
 %patch1 -p1
 %patch2 -p1
 
+
+
 %build
-%{set_build_flags}
 
-# Override all optimization flags when making a debug build
-%{?with_debug: CFLAGS="$CFLAGS -O0 -g"}
-CXXFLAGS="$CFLAGS"
-export CFLAGS CXXFLAGS
-
-%cmake -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
-       -DBUILD_SHARED_LIBS="ON" \
+%cmake . \
        -DCMAKE_BUILD_TYPE="%{?with_debug:Debug}%{!?with_debug:RelWithDebInfo}" \
-       -DCMAKE_INSTALL_PREFIX="%{_usr}" \
-       -DINCLUDE_INSTALL_DIR="%{_includedir}" \
+       -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
+\
+       -DINSTALL_LAYOUT=RPM \
        -DINSTALL_LIBDIR="%{_lib}" \
-       -DSHARE_INSTALL_PREFIX="%{_datadir}" \
-       -DSYSCONF_INSTALL_DIR="%{_sysconfdir}" \
+       -DINSTALL_LIB_SUFFIX="%{_lib}" \
        -DINSTALL_DOCDIR="%{_defaultdocdir}/%{name}" \
        -DINSTALL_LICENSEDIR="%{_defaultlicensedir}/%{name}" \
-       .
 
-#cmake -LAH
-cmake -L .
+# Override all optimization flags when making a debug build
+%if %{with debug}
+CFLAGS="$CFLAGS     -O0 -g"; export CFLAGS
+CXXFLAGS="$CXXFLAGS -O0 -g"; export CXXFLAGS
+FFLAGS="$FFLAGS     -O0 -g"; export FFLAGS
+FCFLAGS="$FCFLAGS   -O0 -g"; export FCFLAGS
+%endif
+
+#cmake -B %%{__cmake_builddir} -LAH
+
+%cmake_build
+
+
 
 %install
-%make_install
+%cmake_install
+
+
 
 %files
 %license COPYING
@@ -63,6 +84,14 @@ cmake -L .
 
 
 %changelog
+* Thu Aug 06 2020 Michal Schorm <mschorm@redhat.com> - 3.1.9-4
+- Force the CMake change regarding the in-source builds also to F31 and F32
+- %%cmake macro covers the %%{set_build_flags}, so they are not needed
+  That also means, the debug build changes to the build flags must be done AFTER the
+  %%cmake macro was used.
+- %%cmake macro also covers several other options which redudndant specification I removed in this commit
+- Default to %%cmake commands instead of %%make commands
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 3.1.9-3
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
