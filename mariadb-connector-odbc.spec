@@ -1,15 +1,10 @@
 # For deep debugging we need to build binaries with extra debug info
 %bcond_with     debug
 
-# Enable CMake in-source builds
+# Disable CMake in-source builds
 #   This is a fix for the https://fedoraproject.org/wiki/Changes/CMake_to_do_out-of-source_builds
 #   So the beaviour will be the same also in F31 nad F32
 %undefine __cmake_in_source_build
-#   Be aware that all subsequent call of CMake *MUST* be called with the specified builddir
-#   e.g. " cmake -B %%{__cmake_builddir} -LAH "
-#   Otherwise you will experience *really odd* behaviour. HOWEVER the "%%{__cmake_builddir}" is not suitable for use,
-#   read this mail discussion for details:
-#   https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/WJUNUJ7BJQYXQTONR5AGOKD3ZNKLSDDC/
 
 
 
@@ -63,7 +58,7 @@ FFLAGS="$FFLAGS     -O0 -g"; export FFLAGS
 FCFLAGS="$FCFLAGS   -O0 -g"; export FCFLAGS
 %endif
 
-#cmake -B %%{__cmake_builddir} -LAH
+#cmake -B %_vpath_builddir -LAH
 
 %cmake_build
 
