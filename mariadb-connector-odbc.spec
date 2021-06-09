@@ -1,11 +1,6 @@
 # For deep debugging we need to build binaries with extra debug info
 %bcond_with     debug
 
-# Disable CMake in-source builds
-#   This is a fix for the https://fedoraproject.org/wiki/Changes/CMake_to_do_out-of-source_builds
-#   So the beaviour will be the same also in F31 nad F32
-%undefine __cmake_in_source_build
-
 
 
 Name:           mariadb-connector-odbc
