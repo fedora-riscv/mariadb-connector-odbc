@@ -4,7 +4,7 @@
 
 
 Name:           mariadb-connector-odbc
-Version:        3.1.12
+Version:        3.1.13
 Release:        1%{?with_debug:.debug}%{?dist}
 Summary:        The MariaDB Native Client library (ODBC driver)
 License:        LGPLv2+
@@ -72,6 +72,9 @@ FCFLAGS="$FCFLAGS   -O0 -g"; export FCFLAGS
 
 
 %changelog
+* Wed Jun 09 2021 Michal Schorm <mschorm@redhat.com> - 3.1.13-1
+- Rebase to 3.1.13
+
 * Thu Apr 22 2021 Michal Schorm <mschorm@redhat.com> - 3.1.12-1
 - Rebase to 3.1.12
 
