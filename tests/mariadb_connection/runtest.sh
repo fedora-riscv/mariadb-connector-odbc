@@ -24,6 +24,20 @@
 #   along with this program. If not, see http://www.gnu.org/licenses/.
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# TEST DESCRIPTION:
+#   Prepare MariaDB database for connection
+#   Configure the MariaDB connector for ODBC
+#   Test that the we are able to log-in via ODBC as a specific DB user using password
+#
+# DOCUMENTATION:
+#   https://mariadb.com/kb/en/about-mariadb-connector-odbc/
+#
+# VERSION DIFERENCES:
+#   * Since MariaDB 10.4, new type of default authentication (unix_socket) is in place
+#     That means we have to create a DB user and a password in order to be able to acces the DB
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Include Beaker environment
 . /usr/bin/rhts-environment.sh || exit 1
@@ -38,49 +52,29 @@ rlJournalStart
         rlAssertRpm unixODBC
         rlAssertRpm mariadb
         rlAssertRpm mariadb-server
-        # check unix ODBC configuration
+        # Check the default unixODBC configuration
+        # There should already be an entry for MariaDB connector for ODBC
         rlAssertExists "/etc/odbcinst.ini"
         rlAssertGrep "MariaDB" "/etc/odbcinst.ini"
 
+        # Now insert the second part of the ODBC configuration
         rlRun "cp -f odbc.ini /etc/"
         rlAssertExists "/etc/odbc.ini"
         rlAssertGrep "MariaDB" "/etc/odbc.ini"
 
         # Start MariaDB
         rlRun "systemctl start mariadb" 0
+
+        # Create a new DB user and password for this test
+        rlRun "echo \"CREATE USER 'odbc_connector_user'@'localhost' IDENTIFIED BY 'odbc_connector_password'\" | mysql " 0
+        # Save the credentials to a variable; we will append it to every isql command
+        rlRun "CREDENTIALS=\"odbc_connector_user odbc_connector_password\"" 0
     rlPhaseEnd
 
     rlPhaseStartTest
-        rlRun " echo 'show databases' | isql -v mariadb-connector-odbc -b > /tmp/test_query_output" 0
-        rlAssertGrep "Database" "/tmp/test_query_output"
-        rlAssertGrep "information_schema" "/tmp/test_query_output"
-        rlAssertGrep "mysql" "/tmp/test_query_output"
-    rlPhaseEnd
+        rlRun " echo \"SHOW DATABASES\" | isql -v mariadb-connector-odbc $CREDENTIALS "
 
-    rlPhaseStartTest
-        rlRun " echo 'create database ci_test_database' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'show databases' | isql -v mariadb-connector-odbc -b > /tmp/test_query_output" 0
-        rlAssertGrep "ci_test_database" "/tmp/test_query_output"
-    rlPhaseEnd
-
-    rlPhaseStartTest
-        rlRun " echo 'create table ci_test_database.ci_test_table (root int, pow int)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (0, 1)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (1, 1)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (2, 4)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (3, 9)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (4, 16)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'insert into ci_test_database.ci_test_table values (5, 25)' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " echo 'select * from ci_test_database.ci_test_table where root>2' | isql -v mariadb-connector-odbc -b > /tmp/test_query_output" 0
-        rlAssertNotGrep "0" "/tmp/test_query_output"
-        rlAssertGrep "9" "/tmp/test_query_output"
-        rlAssertGrep "16" "/tmp/test_query_output"
-        rlAssertGrep "25" "/tmp/test_query_output"
-    rlPhaseEnd
-
-    rlPhaseStartCleanup
-        rlRun " echo 'drop database ci_test_database' | isql -v mariadb-connector-odbc -b " 0
-        rlRun " rm -f /tmp/test_query_output" 0
+	rlRun " echo \"SELECT USER(),CURRENT_USER()\" | isql -v mariadb-connector-odbc $CREDENTIALS "
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
