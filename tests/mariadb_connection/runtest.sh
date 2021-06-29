@@ -56,25 +56,46 @@ rlJournalStart
         # There should already be an entry for MariaDB connector for ODBC
         rlAssertExists "/etc/odbcinst.ini"
         rlAssertGrep "MariaDB" "/etc/odbcinst.ini"
+        # Start MariaDB
+        rlRun "systemctl start mariadb" 0
+    rlPhaseEnd
 
-        # Now insert the second part of the ODBC configuration
+
+    rlPhaseStartTest
+        # Insert the second part of the ODBC configuration
+        # with SOCKET defined
+        rlRun "cp -f socket_odbc.ini /etc/odbc.ini"
+        rlAssertExists "/etc/odbc.ini"
+        rlAssertGrep "MariaDB" "/etc/odbc.ini"
+        rlAssertGrep "SOCKET" "/etc/odbc.ini"
+
+        rlRun " echo \"SHOW DATABASES\" | isql -v mariadb-connector-odbc " 0
+	rlRun " echo \"SELECT USER(),CURRENT_USER()\" | isql -v mariadb-connector-odbc " 0
+    rlPhaseEnd
+
+
+    rlPhaseStartTest
+        # Insert the second part of the ODBC configuration
+        # without SOCKET defined
         rlRun "cp -f odbc.ini /etc/"
         rlAssertExists "/etc/odbc.ini"
         rlAssertGrep "MariaDB" "/etc/odbc.ini"
+        rlAssertNotGrep "SOCKET" "/etc/odbc.ini"
 
-        # Start MariaDB
-        rlRun "systemctl start mariadb" 0
+        rlRun " echo \"SHOW DATABASES\" | isql -v mariadb-connector-odbc " 1
+	rlRun " echo \"SELECT USER(),CURRENT_USER()\" | isql -v mariadb-connector-odbc " 1
+    rlPhaseEnd
 
+
+    rlPhaseStartTest
         # Create a new DB user and password for this test
         rlRun "echo \"CREATE USER 'odbc_connector_user'@'localhost' IDENTIFIED BY 'odbc_connector_password'\" | mysql " 0
         # Save the credentials to a variable; we will append it to every isql command
         rlRun "CREDENTIALS=\"odbc_connector_user odbc_connector_password\"" 0
+
+        rlRun " echo \"SHOW DATABASES\" | isql -v mariadb-connector-odbc $CREDENTIALS " 0
+	rlRun " echo \"SELECT USER(),CURRENT_USER()\" | isql -v mariadb-connector-odbc $CREDENTIALS " 0
     rlPhaseEnd
 
-    rlPhaseStartTest
-        rlRun " echo \"SHOW DATABASES\" | isql -v mariadb-connector-odbc $CREDENTIALS "
-
-	rlRun " echo \"SELECT USER(),CURRENT_USER()\" | isql -v mariadb-connector-odbc $CREDENTIALS "
-    rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
