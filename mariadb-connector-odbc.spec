@@ -33,7 +33,7 @@ and it supports both Unicode and ANSI modes.
 
 %build
 
-%cmake . \
+%cmake \
        -DCMAKE_BUILD_TYPE="%{?with_debug:Debug}%{!?with_debug:RelWithDebInfo}" \
        -DMARIADB_LINK_DYNAMIC="%{_libdir}/libmariadb.so" \
 \
