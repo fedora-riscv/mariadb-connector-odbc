@@ -27,7 +27,7 @@ and it supports both Unicode and ANSI modes.
 
 %prep
 %setup -q -n %{name}-%{version}-src
-%patch1 -p1
+%patch -P1 -p1
 
 
 
